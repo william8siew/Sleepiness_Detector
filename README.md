@@ -1,7 +1,8 @@
 ﻿# Sleepiness_Detector
 Program that takes real-time video of a person's face while they are working on a computer to determine if they are sleepy.
 
-NEXT-UPDATE PLANS: Work on other indicators of sleepiness other than elongated eye closure. 
+NEXT-UPDATE PLANS: Work on other indicators of sleepiness other than elongated eye closure. Eye rate can be calculated by keeping a heap of difference in blinking times. 
+
 References:
 https://www.researchgate.net/publication/227047615_Drowsy_Driver_Detection_Through_Facial_Movement_Analysis
 "Previous approaches to drowsiness detection primarily make pre-assumptions about the relevant behavior, focusing on blink rate, eye closure, and yawning."
