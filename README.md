@@ -6,6 +6,7 @@ NEXT-UPDATE PLANS: Work on other indicators of sleepiness other than elongated e
 References:
 https://www.researchgate.net/publication/227047615_Drowsy_Driver_Detection_Through_Facial_Movement_Analysis
 "Previous approaches to drowsiness detection primarily make pre-assumptions about the relevant behavior, focusing on blink rate, eye closure, and yawning."
+Also Refer to Table 4 for list of indicators of sleepiness.
 
 https://www.pyimagesearch.com/2017/04/24/eye-blink-detection-opencv-python-dlib/
 Reference for non-machine learning approach of using dlibs prebuilt facial detection feature. 
