@@ -10,6 +10,7 @@ import time
 import dlib
 import cv2
 import matplotlib.pyplot as plt
+import winsound
 
 def eye_aspect_ratio(eye):
 	# compute the euclidean distances between the two sets of
@@ -30,12 +31,17 @@ def eye_aspect_ratio(eye):
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
 # frames the eye must be below the threshold
-EYE_AR_THRESH = 0.2
-EYE_AR_CONSEC_FRAMES = 2
- 
+EAR_THRESHOLD = 0.18
+BLINK_CONSEC_FRAMES = 2 # 2 frames below the threshold must occur for a blink to happen
+SLEEPY_CONSEC_FRAMES= 10
+
 # initialize the frame counters and the total number of blinks
-COUNTER = 0
-TOTAL = 0
+blink_frame_counter = 0
+total_blinks = 0
+
+# initialize the frame counters for sleepiness and the state of sleepiness
+sleepy_frame_counter = 0
+sleepy=False
 
 # initialize dlib's face detector (HOG-based) and then create
 # the facial landmark predictor
@@ -106,25 +112,37 @@ while True:
         
         # check to see if the eye aspect ratio is below the blink
 		# threshold, meaning a person's eyes are closed(does not indicate a blink, just 1 frame)
-		if ear < EYE_AR_THRESH:
-			COUNTER += 1
- 
+		if ear < EAR_THRESHOLD:
+			blink_frame_counter += 1
+			sleepy_frame_counter += 1
+			if(sleepy_frame_counter>= SLEEPY_CONSEC_FRAMES):
+				sleepy=True
+ 			
 		# ratio is above threshold, meaning eyes are open
 		else:
 			# if the eyes were closed for a sufficient number of frames
 			# then increment the total number of blinks
-			if COUNTER >= EYE_AR_CONSEC_FRAMES:
-				TOTAL += 1
- 
+			# person cannot be sleepy else it will be equal to several blinks
+			if blink_frame_counter >= BLINK_CONSEC_FRAMES and not(sleepy):
+				total_blinks += 1
+ 			
 			# reset the eye frame counter
-			COUNTER = 0
-        
+			blink_frame_counter = 0
+			sleepy_frame_counter = 0
+			
+			# user has opened eyes and can operate again
+			sleepy=False
+			
         # draw the total number of blinks on the frame along with
 		# the computed eye aspect ratio for the frame
-		cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
+		cv2.putText(frame, "Blinks: {}".format(total_blinks), (10, 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 		cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		if sleepy:
+			winsound.Beep(440,1000)
+			cv2.putText(frame, "GO TO SLEEP!", (120,330),
+					cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
  
 	# show the frame
 	cv2.imshow("Frame", frame)
